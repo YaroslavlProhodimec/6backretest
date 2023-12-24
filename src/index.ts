@@ -20,7 +20,6 @@ console.log(process.env.MONGO_URL)
 
 // @ts-ignore
 const client = new MongoClient(mongoURI);
-
 const db = client.db('node-blog')
 
 export const blogCollection = db.collection ('blog')
@@ -38,6 +37,13 @@ const startApp = async () => {
 app.get('/', (req:any, res:any) => {
     res.send('Hello, МИР!');
 });
+app.delete('/all-data', async (req:any, res:any) => {
+    const result =    await blogCollection.deleteMany({})
+    const result2 =    await postCollection.deleteMany({})
+    return !!result.deletedCount && !!result2.deletedCount
+
+});
+
 
 export       async function runDb() {
     try {

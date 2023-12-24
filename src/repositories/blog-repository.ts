@@ -26,9 +26,9 @@ export class BlogRepository {
     }
 
     static async getBlogById(id: string): Promise<OutputBlogType | null> {
-        console.log(id,'id')
-        const blog:any = await blogCollection.findOne({_id: new ObjectId(id)})
-        console.log(blog,'blog')
+        const objectId = new ObjectId(id);
+
+        const blog:any = await blogCollection.findOne({_id: objectId})
 
         if (!blog) {
             return null
