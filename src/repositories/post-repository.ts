@@ -50,16 +50,19 @@ export class PostRepository {
         publicationDate.setDate(createdAt.getDate() + 1)
 
         const result: any = await postCollection.insertOne({...post,_id: undefined,
-            id: new ObjectId().toString(),  createdAt: createdAt});
+            id: new ObjectId().toString(),blogName:'xaxxa', createdAt: createdAt});
         const id =  result.insertedId
         const found: any = await postCollection.findOne({_id:id})
+
         return {
             _id: undefined,
             id:found._id,
             title: found.title,
+            createdAt: createdAt,
             shortDescription: found.shortDescription,
             content: found.content,
-            blogId: found.blogId
+            blogId: found.blogId,
+            blogName: found.blogName
         }
         //  return  result
         // const foundedPost = db.posts.find((el: any) => el.id === post.id)
@@ -93,6 +96,7 @@ export class PostRepository {
                 blogId: post.blogId
             }
         })
+
         console.log(result,'result')
         return !!result.matchedCount
     }
