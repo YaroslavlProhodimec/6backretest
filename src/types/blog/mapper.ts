@@ -7,6 +7,7 @@ export const blogMapper = (blog:WithId<any>):any => {
         name:blog.name,
         description:blog.description,
         websiteUrl:blog.websiteUrl,
+        isMembership: false,
         createdAt:blog.createdAt.toISOString()
     }
 }
