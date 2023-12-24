@@ -10,7 +10,7 @@ export class PostRepository {
         //     ...result,
         // _id:undefined
         // }
-        const modifiedResult = result.map((post:any) => ({
+        const modifiedResult = result.map((post: any) => ({
             ...post,
             id: post._id.toString(),
             _id: undefined,
@@ -48,32 +48,51 @@ export class PostRepository {
         const publicationDate = new Date()
 
         publicationDate.setDate(createdAt.getDate() + 1)
-        let idCreate = new ObjectId().toString()
-        const result: any = await postCollection.insertOne({...post,_id: undefined,
-            id: idCreate,blogName:'xaxxa', createdAt: createdAt});
-        const id =  result.insertedId
-        const found: any = await postCollection.findOne({_id:id})
+        // let idCreate = new ObjectId().toString()
+        // const result: any = await postCollection.insertOne({...post,_id: undefined,
+        //     id: new ObjectId().toString(),blogName:'xaxxa', createdAt: createdAt});
+        // const id =  result.insertedId
+        // const found: any = await postCollection.findOne({_id:id})
+        //
+        // return {
+        //     _id: undefined,
+        //     id:found.id.toString(),
+        //     title: found.title,
+        //     createdAt: createdAt,
+        //     shortDescription: found.shortDescription,
+        //     content: found.content,
+        //     blogId: found.blogId,
+        //     blogName: found.blogName
+        // }
+        const result: any = await postCollection.insertOne({
+            ...post,
+            _id: undefined,
+            id: new ObjectId().toString(),
+            blogName: 'xaxxa',
+            createdAt: createdAt
+        });
+        const found: any = await postCollection.findOne({_id: result.insertedId})
 
         return {
-            _id: undefined,
-            id:idCreate,
-            title: found.title,
-            createdAt: createdAt,
-            shortDescription: found.shortDescription,
-            content: found.content,
-            blogId: found.blogId,
-            blogName: found.blogName
+            // id: found._id.toString(),
+            // // ...found,
+            // _id: undefined,
+            // name: found.name,
+            // description: found.description,
+            // websiteUrl: found.websiteUrl,
+            // isMembership: false,
+            // // isMembership: found.isMembership,
+            // createdAt: found.createdAt.toISOString()
+            //
+                _id: undefined,
+                id: found._id.toString(),
+                title: found.title,
+                createdAt: found.createdAt.toISOString(),
+                shortDescription: found.shortDescription,
+                content: found.content,
+                blogId: found.blogId,
+                blogName: found.blogName
         }
-        //  return  result
-        // const foundedPost = db.posts.find((el: any) => el.id === post.id)
-        //
-        // if (foundedPost) {
-        //     return {...foundedPost, id: post.id}
-        // }
-        // let newPosts = {...post, id: generateUniqueId(), blogId: '1', blogName: generateUniqueId()}
-        // db.posts.push(newPosts)
-        //
-        // return {...newPosts}
     }
 
 
@@ -84,9 +103,9 @@ export class PostRepository {
 
     static async updatePost(id: string, post: PostType) {
         const objectId = new ObjectId(id);
-        console.log(id,'id')
+        console.log(id, 'id')
         const found: any = await postCollection.findOne({_id: objectId})
-        console.log(found,'found')
+        console.log(found, 'found')
 
         let result = await postCollection.updateOne({_id: objectId}, {
             $set: {
@@ -97,7 +116,7 @@ export class PostRepository {
             }
         })
 
-        console.log(result,'result')
+        console.log(result, 'result')
         return !!result.matchedCount
     }
 
