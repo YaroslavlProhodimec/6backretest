@@ -6,6 +6,7 @@ import {productsRepository} from "../repositories/products-repository";
 import {productsRouter} from "./products-router";
 import {BlogParams} from "../types/blog/input";
 import {blogCollection, postCollection} from "../index";
+import {ObjectId} from "mongodb";
 
 export const blogRoute = Router({})
 
@@ -15,6 +16,9 @@ blogRoute.get('/',async (req: Request, res: Response) => {
 })
 
 blogRoute.get('/:id',idParamsValidation,async (req: Request, res: Response) => {
+    if(!req.params.id){
+        res.sendStatus(404)
+    }
     const id = req.params.id
     const blog = await BlogRepository.getBlogById(id)
 
@@ -38,21 +42,16 @@ blogRoute.post('/',
 
 
 blogRoute.delete('/:id',authMiddleware,idParamsValidation,async (req: Request<BlogParams>, res: Response) => {
-
-    try {
-        // const blogs =
-            await BlogRepository.deleteBlog(req.params.id)
-
-    //     // const result =
-    //     await blogCollection.deleteMany({})
-    //     // const result2 =
-    //     await postCollection.deleteMany({})
-    //
-    //     // const deletedCount = !!result.deletedCount && !!result2.deletedCount
-        res.sendStatus(204)
-    } catch (error) {
-    //     console.error('Error clearing the database:', error);
+    if(!req.params.id){
         res.sendStatus(404)
+    }
+    try {
+        await blogCollection.deleteOne({_id: new ObjectId(req.params.id)})
+        res.sendStatus(204)
+
+    } catch (e) {
+        res.sendStatus(404)
+
     }
     // if(!blogs){
     //     res.sendStatus(404)
@@ -70,7 +69,9 @@ blogRoute.delete('/:id',authMiddleware,idParamsValidation,async (req: Request<Bl
 // })
 
 blogRoute.put('/:id',authMiddleware,blogPostValidation(),idParamsValidation,async (req: Request<BlogParams>, res: Response) => {
-
+    if(!req.params.id){
+        res.sendStatus(404)
+    }
     const blogs = await BlogRepository.updateBlog(req.params.id,req.body)
 
     if (!blogs) {

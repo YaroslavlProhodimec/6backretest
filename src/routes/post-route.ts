@@ -4,6 +4,8 @@ import {BlogParams} from "../types/blog/input";
 import {postValidation} from "../validators/post-validator";
 import {authMiddleware} from "../middlewares/auth/auth-middleware";
 import {BlogRepository} from "../repositories/blog-repository";
+import {postCollection} from "../index";
+import {ObjectId} from "mongodb";
 
 export const postRoute = Router({})
 
@@ -48,11 +50,17 @@ postRoute.delete('/:id', authMiddleware,async (req: Request<BlogParams>, res: Re
     if(!req.params.id){
         res.sendStatus(404)
     }
-    const blogs = await PostRepository.deletePost(req.params.id)
-    if (!blogs) {
+    try {
+         await postCollection.deleteOne({_id: new ObjectId(req.params.id)})
+        res.sendStatus(204)
+
+    } catch (e) {
         res.sendStatus(404)
+
     }
-    res.sendStatus(204)
+
+    // const blogs = await PostRepository.deletePost(req.params.id)
+
 
 })
 
