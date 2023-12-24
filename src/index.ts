@@ -40,14 +40,26 @@ app.get('/', (req:any, res:any) => {
     res.send('Hello, МИР!');
 });
 app.delete('/all-data', async (req:any, res:any) => {
-    const result =    await blogCollection.deleteMany({})
-    const result2 =    await postCollection.deleteMany({})
-    const deletedCount = !!result.deletedCount && !!result2.deletedCount
-    if(!deletedCount){
-        res.sendStatus(404)
-    }
-    res.sendStatus(204)
+    // const result =    await blogCollection.deleteMany({})
+    // const result2 =    await postCollection.deleteMany({})
+    // const deletedCount = !!result.deletedCount && !!result2.deletedCount
+    //
+    //
+    //
+    // if(!deletedCount){
+    //     res.sendStatus(404)
+    // }
+    // res.sendStatus(204)
+    const result1 = await blogCollection.deleteMany({});
 
+    const result2 = await postCollection.deleteMany({});
+    const deletedCount = result1.deletedCount && result2.deletedCount;
+
+    if (!deletedCount) {
+        res.sendStatus(404);
+    } else {
+        res.sendStatus(204);
+    }
 });
 
 
