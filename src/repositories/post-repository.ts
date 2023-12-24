@@ -42,6 +42,7 @@ export class PostRepository {
         const id =  result.insertedId
         const found: any = await postCollection.findOne({_id:id})
         return {
+            id:found._id,
             title: found.title,
             shortDescription: found.shortDescription,
             content: found.content,

@@ -28,7 +28,7 @@ export class BlogRepository {
     static async getBlogById(id: string): Promise<OutputBlogType | null> {
         const objectId = new ObjectId(id);
 
-        const blog:any = await blogCollection.findOne({_id: objectId})
+        const blog: any = await blogCollection.findOne({_id: objectId})
 
         if (!blog) {
             return null
@@ -42,30 +42,36 @@ export class BlogRepository {
         const publicationDate = new Date()
 
         publicationDate.setDate(createdAt.getDate() + 1)
-        const result: any = await blogCollection.insertOne({...blog, isMembership: false, createdAt: createdAt});
+        const result: any = await blogCollection.insertOne({
+            ...blog,
+            _id: undefined,
+            id: new ObjectId().toString(),
+            isMembership: false,
+            createdAt: createdAt
+        });
         const found: any = await blogCollection.findOne({_id: result.insertedId})
 
         return {
-            id:   found._id.toString(),
+            id: found._id.toString(),
+            // ...found,
+            _id: undefined,
             name: found.name,
             description: found.description,
             websiteUrl: found.websiteUrl,
-            isMembership:false,
+            // isMembership:false,
             // isMembership: found.isMembership,
-            createdAt:  found.createdAt.toISOString()
+            createdAt: found.createdAt.toISOString()
         }
     }
 
-    static async updateBlog (id: string, updateData: UpdateBlogData)
+    static async updateBlog(id: string, updateData: UpdateBlogData)
         :
-        Promise<boolean>
-
-    {
+        Promise<boolean> {
         const objectId = new ObjectId(id);
-        console.log(id,'id')
+        console.log(id, 'id')
         // console.log(updateData,'updateData')
         const found: any = await blogCollection.findOne({_id: objectId})
-        console.log(found,'found')
+        console.log(found, 'found')
 
         let result = await blogCollection.updateOne({_id: objectId}, {
             $set: {
@@ -73,8 +79,8 @@ export class BlogRepository {
                 description: updateData.description,
                 websiteUrl: updateData.websiteUrl,
             }
-           })
-        console.log(result,'result')
+        })
+        console.log(result, 'result')
         return !!result.matchedCount
     }
 
@@ -83,7 +89,7 @@ export class BlogRepository {
         return !!result.deletedCount
     }
 
-   static async deleteAllBlogs() {
+    static async deleteAllBlogs() {
 
         const result = await blogCollection.deleteMany({})
 

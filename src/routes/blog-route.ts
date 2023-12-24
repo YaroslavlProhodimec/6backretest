@@ -35,6 +35,7 @@ blogRoute.post('/',
         }
 })
 
+
 blogRoute.delete('/:id',authMiddleware,idParamsValidation,async (req: Request<BlogParams>, res: Response) => {
 
     const blogs = await BlogRepository.deleteBlog(req.params.id)
