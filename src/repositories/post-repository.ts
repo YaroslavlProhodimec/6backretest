@@ -70,6 +70,7 @@ export class PostRepository {
              _id:new ObjectId() ,
             id: new ObjectId().toString(),
             blogName: 'xaxxa',
+             blogId:post.blogId,
             createdAt: createdAt
         });
         const found: any = await postCollection.findOne({_id: result.insertedId})

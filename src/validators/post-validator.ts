@@ -36,6 +36,7 @@
 
 import {body, param} from 'express-validator';
 import {inputModelValidation} from "../middlewares/input-model-validation/input-model-validation";
+import {BlogRepository} from "../repositories/blog-repository";
 
 export const idValidation = body('id')
     .optional()
@@ -66,6 +67,14 @@ export const blogIdValidation = body('blogId')
     .optional()
     .isLength({ max: 30})
     .isString().trim()
+    .notEmpty()
+    .custom((value)=>{
+        const blog = BlogRepository.getBlogById(value)
+        if (!blog){
+            throw new Error('Blog is not exists')
+        }
+        return true
+    })
     .withMessage('Incorrect URL blogId');
 // export const blogIdParamValidation = param('blogId')
 //     .optional()
