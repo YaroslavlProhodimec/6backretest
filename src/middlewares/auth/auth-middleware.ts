@@ -14,7 +14,7 @@ export const authMiddleware = (req:Request,res:Response,next:NextFunction) => {
         return
     }
 
-     const [basic,token] =auth.split(' ')
+     const [basic,token] = auth.split(' ')
 
     if(basic !== 'Basic'){
         res.sendStatus(401)

@@ -41,7 +41,9 @@ app.get('/', (req:any, res:any) => {
     res.send('Hello, МИР!');
 });
 
-app.delete('/testing/all-data',authMiddleware,async (req:any, res:any) => {
+app.delete('/testing/all-data',
+    // authMiddleware,
+    async (req:any, res:any) => {
     try {
     // const result =
         await blogCollection.deleteMany({})
