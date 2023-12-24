@@ -3,6 +3,7 @@ import {PostRepository} from "../repositories/post-repository";
 import {BlogParams} from "../types/blog/input";
 import {postValidation} from "../validators/post-validator";
 import {authMiddleware} from "../middlewares/auth/auth-middleware";
+import {BlogRepository} from "../repositories/blog-repository";
 
 export const postRoute = Router({})
 
@@ -28,12 +29,14 @@ postRoute.post('/', authMiddleware, postValidation(), async (req: Request, res: 
     }
 })
 postRoute.put('/:id', authMiddleware, postValidation(),async (req: Request<BlogParams>, res: Response) => {
-    const blogs = await PostRepository.updatePost(req.params.id, req.body)
 
-    if (!blogs) {
+    try {
+       await PostRepository.updatePost(req.params.id, req.body)
+
+        res.sendStatus(204)
+    } catch (error) {
         res.sendStatus(404)
     }
-    res.sendStatus(204)
 })
 
 postRoute.delete('/:id', authMiddleware,async (req: Request<BlogParams>, res: Response) => {
@@ -42,6 +45,7 @@ postRoute.delete('/:id', authMiddleware,async (req: Request<BlogParams>, res: Re
         res.sendStatus(404)
     }
     res.sendStatus(204)
+
 })
 
 

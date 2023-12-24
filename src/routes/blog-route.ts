@@ -5,6 +5,7 @@ import {authMiddleware} from "../middlewares/auth/auth-middleware";
 import {productsRepository} from "../repositories/products-repository";
 import {productsRouter} from "./products-router";
 import {BlogParams} from "../types/blog/input";
+import {blogCollection, postCollection} from "../index";
 
 export const blogRoute = Router({})
 
@@ -38,22 +39,35 @@ blogRoute.post('/',
 
 blogRoute.delete('/:id',authMiddleware,idParamsValidation,async (req: Request<BlogParams>, res: Response) => {
 
-    const blogs = await BlogRepository.deleteBlog(req.params.id)
+    try {
+        // const blogs =
+            await BlogRepository.deleteBlog(req.params.id)
 
-    if(!blogs){
+    //     // const result =
+    //     await blogCollection.deleteMany({})
+    //     // const result2 =
+    //     await postCollection.deleteMany({})
+    //
+    //     // const deletedCount = !!result.deletedCount && !!result2.deletedCount
+        res.sendStatus(204)
+    } catch (error) {
+    //     console.error('Error clearing the database:', error);
         res.sendStatus(404)
     }
-    res.sendStatus(204)
+    // if(!blogs){
+    //     res.sendStatus(404)
+    // }
+    // res.sendStatus(204)
 })
-blogRoute.delete('/',authMiddleware,idParamsValidation,async (req: Request<BlogParams>, res: Response) => {
-
-    const blogs = await BlogRepository.deleteAllBlogs()
-
-    if(!blogs){
-        res.sendStatus(404)
-    }
-    res.sendStatus(204)
-})
+// blogRoute.delete('/',authMiddleware,idParamsValidation,async (req: Request<BlogParams>, res: Response) => {
+//
+//     const blogs = await BlogRepository.deleteAllBlogs()
+//
+//     if(!blogs){
+//         res.sendStatus(404)
+//     }
+//     res.sendStatus(204)
+// })
 
 blogRoute.put('/:id',authMiddleware,blogPostValidation(),idParamsValidation,async (req: Request<BlogParams>, res: Response) => {
 
