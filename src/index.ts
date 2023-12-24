@@ -4,8 +4,10 @@ import {productsRouter} from "./routes/products-router";
 import {app} from "./settings";
 import {blogRoute} from "./routes/blog-route";
 import {OutputBlogType} from "./types/blog/output";
+import {postRoute} from "./routes/post-route";
 app.use('/products',productsRouter)
 app.use('/blogs',blogRoute)
+app.use('/posts',postRoute)
 
 dotenv.config()
 const port  = 5000
@@ -23,10 +25,11 @@ const client = new MongoClient(mongoURI);
 const db = client.db('node-blog')
 
 export const blogCollection = db.collection ('blog')
+export const postCollection  = db.collection('post')
+
 // "name": "string",
 //     "description": "string",
 //     "websiteUrl": "https://nm0Q.GWyzt0V608mS66b1EP7hBP_tCxjSIWBJ300sSbWqMTyGZbHmDfok8qBKeBRkdKuENpBmHk8HpV.6M5mcqL0.3JG"
-export const postCollection = db.collection('post')
 
 const startApp = async () => {
     await  runDb()

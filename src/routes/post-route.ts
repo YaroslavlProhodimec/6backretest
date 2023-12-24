@@ -6,38 +6,44 @@ import {authMiddleware} from "../middlewares/auth/auth-middleware";
 
 export const postRoute = Router({})
 
-postRoute.get('/', (req: Request, res: Response) => {
-    const posts = PostRepository.getAllPosts()
+postRoute.get('/', async (req: Request, res: Response) => {
+    const posts = await PostRepository.getAllPosts()
     res.status(200).send(posts)
 })
-
-postRoute.post('/', authMiddleware,postValidation(),  (req: Request, res: Response) => {
-    const blogs = PostRepository.addPost(req.body)
-    res.status(201).send(blogs)
-})
-postRoute.delete('/:id', authMiddleware, (req: Request<BlogParams>, res: Response) => {
-    const blogs = PostRepository.deletePost(req.params.id)
-    if (!blogs) {
-        res.sendStatus(404)
-    }
-    res.sendStatus(204)
-})
-postRoute.put('/:id', authMiddleware, postValidation(), (req: Request<BlogParams>, res: Response) => {
-    const blogs = PostRepository.updatePost(req.params.id, req.body)
-
-    if (!blogs) {
-        res.sendStatus(404)
-    }
-    res.sendStatus(204)
-})
-
-postRoute.get('/:id', (req: Request<BlogParams>, res: Response) => {
+postRoute.get('/:id', async (req: Request<BlogParams>, res: Response) => {
     const id = req.params.id
-    const blog = PostRepository.getPostById(id)
+    const blog = await PostRepository.getPostById(id)
 
     if (!blog) {
         res.sendStatus(404)
     }
     res.send(blog)
 })
+postRoute.post('/', authMiddleware, postValidation(), async (req: Request, res: Response) => {
+    const posts = await PostRepository.addPost(req.body)
+    if (posts) {
+        res.status(201).send(posts)
+    } else {
+        res.sendStatus(404)
+    }
+})
+postRoute.put('/:id', authMiddleware, postValidation(),async (req: Request<BlogParams>, res: Response) => {
+    const blogs = await PostRepository.updatePost(req.params.id, req.body)
+
+    if (!blogs) {
+        res.sendStatus(404)
+    }
+    res.sendStatus(204)
+})
+
+postRoute.delete('/:id', authMiddleware,async (req: Request<BlogParams>, res: Response) => {
+    const blogs = await PostRepository.deletePost(req.params.id)
+    if (!blogs) {
+        res.sendStatus(404)
+    }
+    res.sendStatus(204)
+})
+
+
+
 

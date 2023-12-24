@@ -1,5 +1,3 @@
-import {db} from '../db/db'
-import {generateUniqueId} from "./blog-repository";
 import {blogCollection, postCollection} from "../index";
 import {ObjectId} from "mongodb";
 
@@ -9,54 +7,80 @@ export class PostRepository {
         const result: any = await postCollection.find({}).toArray()
         return result
     }
+
     static async getPostById(id: string) {
         const objectId = new ObjectId(id);
 
-        const blog:any = await blogCollection.findOne({_id: objectId})
+        const post: any = await postCollection.findOne({_id: objectId})
 
-        if (!blog) {
+        if (!post) {
             return null
         }
-        return blog
+        return post
     }
+
+
     static async addPost(post: PostType) {
+        // "id": "string",
+        //     "title": "string",
+        //     "shortDescription": "string",
+        //     "content": "string",
+        //     "blogId": "string",
+        //     "blogName": "string",
+        //     "createdAt": "2023-12-24T14:58:03.422Z"
 
-        const foundedPost = db.posts.find((el:any) => el.id === post.id)
+        // "title": "string",
+        //     "shortDescription": "string",
+        //     "content": "string",
+        //     "blogId": "string"
+        const createdAt = new Date()
+        const publicationDate = new Date()
 
-        if (foundedPost) {
-            return {...foundedPost, id: post.id}
+        publicationDate.setDate(createdAt.getDate() + 1)
+
+        const result: any = await postCollection.insertOne({...post,  createdAt: createdAt});
+        const id =  result.insertedId
+        const found: any = await postCollection.findOne({_id:id})
+        return {
+            title: found.title,
+            shortDescription: found.shortDescription,
+            content: found.content,
+            blogId: found.blogId
         }
-        let newPosts = {...post, id: generateUniqueId(), blogId:'1', blogName: generateUniqueId()}
-        db.posts.push(newPosts)
-
-        return {...newPosts}
+        //  return  result
+        // const foundedPost = db.posts.find((el: any) => el.id === post.id)
+        //
+        // if (foundedPost) {
+        //     return {...foundedPost, id: post.id}
+        // }
+        // let newPosts = {...post, id: generateUniqueId(), blogId: '1', blogName: generateUniqueId()}
+        // db.posts.push(newPosts)
+        //
+        // return {...newPosts}
     }
+
 
     static async deletePost(id: string) {
-        let foundedIndexPost: any = db.posts.findIndex(b => b.id === id)
-        if (foundedIndexPost === -1) {
-            return null
-        }
-        db.posts.splice(foundedIndexPost, 1)
-
-        return foundedIndexPost
+        const result = await postCollection.deleteOne({_id: new ObjectId(id)})
+        return !!result.deletedCount
     }
 
-    static async updatePost(id: string, blog: PostType) {
-        let foundedIndexPost: any = db.posts.findIndex(b => b.id === id)
-        let foundedPost: any = db.posts.find(b => b.id === id)
-        let {blogId, title, shortDescription, content,} = blog
-        if (foundedIndexPost === -1) {
-            return null
-        }
-        const updatedPost = {
-            ...foundedPost, blogId,
-            title, shortDescription, content,
-        }
-        db.posts.splice(foundedIndexPost, 1, updatedPost)
+    static async updatePost(id: string, post: PostType) {
+        const objectId = new ObjectId(id);
+        console.log(id,'id')
+        const found: any = await postCollection.findOne({_id: objectId})
+        console.log(found,'found')
 
-
-        return updatedPost
+        let result = await postCollection.updateOne({_id: objectId}, {
+            $set: {
+                title: post.title,
+                shortDescription: post.shortDescription,
+                content: post.content,
+                blogId: post.blogId
+            }
+        })
+        console.log(result,'result')
+        return !!result.matchedCount
     }
 
 
