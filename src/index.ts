@@ -3,7 +3,6 @@ import dotenv from 'dotenv'
 import {productsRouter} from "./routes/products-router";
 import {app} from "./settings";
 import {blogRoute} from "./routes/blog-route";
-import {OutputBlogType} from "./types/blog/output";
 import {postRoute} from "./routes/post-route";
 app.use('/products',productsRouter)
 app.use('/blogs',blogRoute)
