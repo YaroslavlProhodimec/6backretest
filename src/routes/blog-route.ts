@@ -50,20 +50,18 @@ blogRoute.delete('/:id',authMiddleware,idParamsValidation,async (req: Request<Bl
         res.sendStatus(404)
     }
     let idCreate = new ObjectId(req.params.id)
-
     const found: any = await blogCollection.findOne({_id:idCreate})
-    const foundPost: any = await postCollection.findOne({_blogId:idCreate})
-
     console.log(found,'found')
     // try {
     if(found){
         let result = await blogCollection.deleteOne({_id: idCreate})
-        await foundPost.deleteOne({_id: idCreate})
         console.log(result,'result')
 
         res.sendStatus(204)
         return;
     }
+
+
     // } catch (e) {
         res.sendStatus(404)
 

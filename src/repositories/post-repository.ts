@@ -70,14 +70,13 @@ export class PostRepository {
              _id:new ObjectId() ,
             id: new ObjectId().toString(),
             blogName: 'xaxxa',
-             blogId:post.blogId,
             createdAt: createdAt
         });
         const found: any = await postCollection.findOne({_id: result.insertedId})
 
         return {
             // id: found._id.toString(),
-            // // ...found,
+            // // ...foundgit ,
             // _id: undefined,
             // name: found.name,
             // description: found.description,
