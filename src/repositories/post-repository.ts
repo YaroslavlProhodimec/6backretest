@@ -5,7 +5,18 @@ export class PostRepository {
 
     static async getAllPosts() {
         const result: any = await postCollection.find({}).toArray()
-        return result
+        // console.log(result,'result')
+        // return {
+        //     ...result,
+        // _id:undefined
+        // }
+        const modifiedResult = result.map((post:any) => ({
+            ...post,
+            id: post._id.toString(),
+            _id: undefined,
+        }));
+
+        return modifiedResult;
     }
 
     static async getPostById(id: string) {
@@ -38,10 +49,12 @@ export class PostRepository {
 
         publicationDate.setDate(createdAt.getDate() + 1)
 
-        const result: any = await postCollection.insertOne({...post,  createdAt: createdAt});
+        const result: any = await postCollection.insertOne({...post,_id: undefined,
+            id: new ObjectId().toString(),  createdAt: createdAt});
         const id =  result.insertedId
         const found: any = await postCollection.findOne({_id:id})
         return {
+            _id: undefined,
             id:found._id,
             title: found.title,
             shortDescription: found.shortDescription,

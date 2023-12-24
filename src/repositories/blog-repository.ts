@@ -19,7 +19,14 @@ export class BlogRepository {
         //     createdAt: createdAt.toISOString(),
         //     isMembership: false,
         // }
-        return result
+        // return result
+        const modifiedResult = result.map((blog:any) => ({
+            ...blog,
+            id: blog._id.toString(),
+            _id: undefined,
+        }));
+
+        return modifiedResult;
         // } catch (e){
         //     console.log(e,'ERROR getAllBlogs')
         //  }
