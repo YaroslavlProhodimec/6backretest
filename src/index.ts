@@ -43,7 +43,11 @@ app.get('/', (req:any, res:any) => {
 app.delete('/all-data', async (req:any, res:any) => {
     const result =    await blogCollection.deleteMany({})
     const result2 =    await postCollection.deleteMany({})
-    return !!result.deletedCount && !!result2.deletedCount
+    const deletedCount = !!result.deletedCount && !!result2.deletedCount
+    if(!deletedCount){
+        res.sendStatus(404)
+    }
+    res.sendStatus(204)
 
 });
 
