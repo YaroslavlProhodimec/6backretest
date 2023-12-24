@@ -48,15 +48,15 @@ export class PostRepository {
         const publicationDate = new Date()
 
         publicationDate.setDate(createdAt.getDate() + 1)
-
+        let idCreate = new ObjectId().toString()
         const result: any = await postCollection.insertOne({...post,_id: undefined,
-            id: new ObjectId().toString(),blogName:'xaxxa', createdAt: createdAt});
+            id: idCreate,blogName:'xaxxa', createdAt: createdAt});
         const id =  result.insertedId
         const found: any = await postCollection.findOne({_id:id})
 
         return {
             _id: undefined,
-            id:found._id,
+            id:idCreate,
             title: found.title,
             createdAt: createdAt,
             shortDescription: found.shortDescription,
