@@ -50,9 +50,9 @@ export class BlogRepository {
             name: found.name,
             description: found.description,
             websiteUrl: found.websiteUrl,
+            isMembership:false,
             // isMembership: found.isMembership,
             createdAt:  found.createdAt.toISOString()
-
         }
     }
 
