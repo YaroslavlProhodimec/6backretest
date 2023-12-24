@@ -42,7 +42,7 @@ export class BlogRepository {
         const publicationDate = new Date()
 
         publicationDate.setDate(createdAt.getDate() + 1)
-        const result: any = await blogCollection.insertOne({...blog, isMembership: true, createdAt: createdAt});
+        const result: any = await blogCollection.insertOne({...blog, isMembership: false, createdAt: createdAt});
         const found: any = await blogCollection.findOne({_id: result.insertedId})
 
         return {
