@@ -12,6 +12,9 @@ postRoute.get('/', async (req: Request, res: Response) => {
     res.status(200).send(posts)
 })
 postRoute.get('/:id', async (req: Request<BlogParams>, res: Response) => {
+    if(!req.params.id){
+        res.sendStatus(404)
+    }
     const id = req.params.id
     const blog = await PostRepository.getPostById(id)
 
@@ -29,7 +32,9 @@ postRoute.post('/', authMiddleware, postValidation(), async (req: Request, res: 
     }
 })
 postRoute.put('/:id', authMiddleware, postValidation(),async (req: Request<BlogParams>, res: Response) => {
-
+if(!req.params.id){
+    res.sendStatus(404)
+}
     try {
        await PostRepository.updatePost(req.params.id, req.body)
 
@@ -40,6 +45,9 @@ postRoute.put('/:id', authMiddleware, postValidation(),async (req: Request<BlogP
 })
 
 postRoute.delete('/:id', authMiddleware,async (req: Request<BlogParams>, res: Response) => {
+    if(!req.params.id){
+        res.sendStatus(404)
+    }
     const blogs = await PostRepository.deletePost(req.params.id)
     if (!blogs) {
         res.sendStatus(404)
