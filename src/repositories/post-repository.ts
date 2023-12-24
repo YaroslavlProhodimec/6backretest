@@ -67,6 +67,7 @@ export class PostRepository {
         const result: any = await postCollection.insertOne({
             ...post,
             // _id: undefined,
+             _id:new ObjectId() ,
             id: new ObjectId().toString(),
             blogName: 'xaxxa',
             createdAt: createdAt
@@ -85,6 +86,7 @@ export class PostRepository {
             // createdAt: found.createdAt.toISOString()
             //
             //     _id: undefined,
+            ...found,
                 id: found._id.toString(),
                 title: found.title,
                 createdAt: found.createdAt.toISOString(),
