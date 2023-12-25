@@ -65,12 +65,14 @@ export const contentValidation = body('content')
 
 export const blogIdValidation = body('blogId')
     .optional()
-    .isLength({ max: 30})
-    .isString().trim()
+    // .isLength({ max: 30})
+    .isString()
+    .trim()
     .notEmpty()
-    .custom((value)=>{
+    .custom( async (value)=>{
         console.log(value,'value')
-        const blog = BlogRepository.getBlogById(value)
+        const blog = await BlogRepository.getBlogById(value)
+        console.log(blog,'blog')
         if (!blog){
             throw new Error('Blog is not exists')
         }
@@ -91,7 +93,8 @@ export const blogNameValidation = body('blogName')
 
 export const postValidation = () => [
     idValidation,
-    titleValidation, shortDescriptionValidation,
+    titleValidation,
+    shortDescriptionValidation,
     contentValidation,
     blogIdValidation,
     blogNameValidation,
