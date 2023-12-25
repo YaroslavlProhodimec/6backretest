@@ -1,5 +1,6 @@
 import {blogCollection, postCollection} from "../index";
 import {ObjectId} from "mongodb";
+import {BlogRepository} from "./blog-repository";
 
 export class PostRepository {
 
@@ -10,10 +11,11 @@ export class PostRepository {
         //     ...result,
         // _id:undefined
         // }
+        console.log(result,'result')
         const modifiedResult = result.map((post: any) => ({
             ...post,
             id: post._id.toString(),
-            _id: undefined,
+            // _id: undefined,
         }));
 
         return modifiedResult;
@@ -27,7 +29,15 @@ export class PostRepository {
         if (!post) {
             return null
         }
-        return post
+        console.log(post,'post')
+        // return post
+        const modifiedResult = post.map((blog:any) => ({
+            ...blog,
+            id: blog._id.toString(),
+            // _id: undefined,
+        }));
+
+        return modifiedResult;
     }
 
 
@@ -44,6 +54,12 @@ export class PostRepository {
         //     "shortDescription": "string",
         //     "content": "string",
         //     "blogId": "string"
+        const foundIdBlog = await blogCollection.findOne({_id:new ObjectId(post.blogId)})
+
+       if(!foundIdBlog){
+           return null
+       }
+
         const createdAt = new Date()
         const publicationDate = new Date()
 

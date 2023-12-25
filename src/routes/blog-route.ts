@@ -49,27 +49,25 @@ blogRoute.delete('/:id',authMiddleware,idParamsValidation,async (req: Request<Bl
     if(!req.params.id){
         res.sendStatus(404)
     }
+    console.log(req.params.id,'req.params.id')
     let idCreate = new ObjectId(req.params.id)
     const found: any = await blogCollection.findOne({_id:idCreate})
     console.log(found,'found')
     // try {
     if(found){
-        let result = await blogCollection.deleteOne({_id: idCreate})
+        let result =
+            await blogCollection.deleteOne({_id: idCreate})
+        let postResult =
+            // await postCollection.deleteOne({blogId: idCreate})
+            await postCollection.deleteMany({ blogId: req.params.id });
         console.log(result,'result')
-
+        console.log(postResult,'postResult')
         res.sendStatus(204)
         return;
     }
 
-
-    // } catch (e) {
         res.sendStatus(404)
 
-    // }
-    // if(!blogs){
-    //     res.sendStatus(404)
-    // }
-    // res.sendStatus(204)
 })
 // blogRoute.delete('/',authMiddleware,idParamsValidation,async (req: Request<BlogParams>, res: Response) => {
 //
