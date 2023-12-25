@@ -7,18 +7,18 @@ export class PostRepository {
     static async getAllPosts() {
         const result: any = await postCollection.find({}).toArray()
         // console.log(result,'result')
-        // return {
-        //     ...result,
-        // _id:undefined
-        // }
+        return {
+            ...result,
+        _id:undefined
+        }
         console.log(result,'result')
-        const modifiedResult = result.map((post: any) => ({
-            ...post,
-            id: post._id.toString(),
-            // _id: undefined,
-        }));
-
-        return modifiedResult;
+    //     const modifiedResult = result.map((post: any) => ({
+    //         ...post,
+    //         id: post._id.toString(),
+    //         // _id: undefined,
+    //     }));
+    //
+    //     return modifiedResult;
     }
 
     static async getPostById(id: string) {

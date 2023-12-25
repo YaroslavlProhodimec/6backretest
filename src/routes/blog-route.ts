@@ -59,7 +59,7 @@ blogRoute.delete('/:id',authMiddleware,idParamsValidation,async (req: Request<Bl
             await blogCollection.deleteOne({_id: idCreate})
         let postResult =
             // await postCollection.deleteOne({blogId: idCreate})
-            await postCollection.deleteMany({ blogId: req.params.id });
+            // await postCollection.deleteMany({ blogId: req.params.id });
         console.log(result,'result')
         console.log(postResult,'postResult')
         res.sendStatus(204)
