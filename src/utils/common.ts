@@ -1,6 +1,4 @@
-import dotenv from "dotenv";
 
-dotenv.config()
 
 let counter = 0
 
@@ -10,7 +8,6 @@ export const createdNewId = (descriptor:string)=>{
     return (+(new Date()))*Math.random() + descriptor + counter
 }
 
-export const mongoURI = process.env.MONGO_URL
 
 
 export  const port:number = 5010
