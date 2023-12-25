@@ -5,9 +5,11 @@ import {blogRoute} from "./routes/blog-route";
 import {postRoute} from "./routes/post-route";
 import {runDb} from "./db/db";
 import {blogCollection, postCollection} from "./db/db-collections";
+import {testingRouter} from "./testing-router";
 app.use('/products',productsRouter)
 app.use('/blogs',blogRoute)
 app.use('/posts',postRoute)
+app.use('/testing',testingRouter)
 
 dotenv.config()
 const port  = 5000

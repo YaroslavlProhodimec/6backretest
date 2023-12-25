@@ -1,9 +1,9 @@
-import {blogCollection, postCollection} from "../index";
 import {ObjectId, WithId} from "mongodb";
 import {BlogRepository} from "./blog-repository";
 import {OutputPostType, PostType} from "../types/post/output";
 import {postMapper} from "../types/post/mapper";
 import {CreatePostDto, UpdatePostDto} from "../types/post/input";
+import {postCollection} from "../db/db-collections";
 
 export class PostRepository {
 
