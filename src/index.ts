@@ -25,18 +25,18 @@ const startApp = async () => {
     })
 }
 
-app.delete('/testing/all-data',
-    async (req:any, res:any) => {
-    try {
-        await blogCollection.deleteMany({})
-        await postCollection.deleteMany({})
-
-        res.sendStatus(204)
-    } catch (error) {
-        console.error('Error clearing the database:', error);
-        res.sendStatus(404)
-    }
-});
+// app.delete('/testing/all-data',
+//     async (req:any, res:any) => {
+//     try {
+//         await blogCollection.deleteMany({})
+//         await postCollection.deleteMany({})
+//
+//         res.sendStatus(204)
+//     } catch (error) {
+//         console.error('Error clearing the database:', error);
+//         res.sendStatus(404)
+//     }
+// });
 
 
 
