@@ -1,9 +1,9 @@
 import {v4 as uuidv4} from 'uuid';
-import {blogCollection} from "../index";
 import {BlogType, OutputBlogType} from "../types/blog/output";
 import {ObjectId, WithId} from "mongodb";
 import {CreateBlogDto,  UpdateBlogDto} from "../types/blog/input";
 import {blogMapper} from "../types/blog/mapper";
+import {blogCollection} from "../index";
 
 export class BlogRepository {
 

@@ -3,7 +3,7 @@ import {BlogRepository} from "./blog-repository";
 import {OutputPostType, PostType} from "../types/post/output";
 import {postMapper} from "../types/post/mapper";
 import {CreatePostDto, UpdatePostDto} from "../types/post/input";
-import {postCollection} from "../db/db-collections";
+import {postCollection} from "../index";
 
 export class PostRepository {
 
@@ -16,7 +16,7 @@ export class PostRepository {
 
     static async getPostById(id: string): Promise<OutputPostType | null> {
         try {
-            const post: WithId<PostType> | null = await postCollection.findOne({_id: new ObjectId(id)})
+            const post: any = await postCollection.findOne({_id: new ObjectId(id)})
             if (!post) {
                 return null
             }
