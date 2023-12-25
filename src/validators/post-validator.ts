@@ -69,6 +69,7 @@ export const blogIdValidation = body('blogId')
     .isString().trim()
     .notEmpty()
     .custom((value)=>{
+        console.log(value,'value')
         const blog = BlogRepository.getBlogById(value)
         if (!blog){
             throw new Error('Blog is not exists')

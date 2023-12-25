@@ -35,7 +35,7 @@ export class BlogRepository {
     static async getBlogById(id: string): Promise<OutputBlogType | null> {
         const objectId = new ObjectId(id);
 
-        const blog: any = await blogCollection.findOne({_id: objectId})
+        const blog: any = await blogCollection.findOne({id: id})
 
         if (!blog) {
             return null

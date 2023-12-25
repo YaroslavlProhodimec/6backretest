@@ -28,6 +28,11 @@ postRoute.get('/:id', async (req: Request<BlogParams>, res: Response) => {
 })
 postRoute.post('/', authMiddleware, postValidation(), async (req: Request, res: Response) => {
     const posts = await PostRepository.addPost(req.body)
+    const foundIdBlog = await blogCollection.findOne({_id:new ObjectId(req.body.post.blogId)})
+
+    if(!foundIdBlog){
+        res.sendStatus(400)
+    }
     if (posts) {
         res.status(201).send(posts)
         return;
@@ -40,6 +45,8 @@ postRoute.put('/:id', authMiddleware, postValidation(),async (req: Request<BlogP
 if(!req.params.id){
     res.sendStatus(404)
 }
+    const foundIdBlog = await blogCollection.findOne({_id:new ObjectId(req.body.post.blogId)})
+
     try {
        await PostRepository.updatePost(req.params.id, req.body)
 
