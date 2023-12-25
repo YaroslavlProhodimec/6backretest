@@ -1,13 +1,15 @@
 import {WithId} from "mongodb";
+import {BlogType, OutputBlogType} from "./output";
+import {OutputPostType, PostType} from "../post/output";
 // import {BlogType, OutputBlogType} from "./output";
 
-export const blogMapper = (blog:WithId<any>):any => {
+export const blogMapper = (blog:WithId<BlogType>):OutputBlogType => {
     return {
         id:blog._id.toString(),
         name:blog.name,
         description:blog.description,
         websiteUrl:blog.websiteUrl,
-        isMembership: false,
-        createdAt:blog.createdAt.toISOString()
+        createdAt:blog.createdAt,
+        isMembership:blog.isMembership
     }
 }

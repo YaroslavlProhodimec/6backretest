@@ -1,141 +1,76 @@
 import {blogCollection, postCollection} from "../index";
-import {ObjectId} from "mongodb";
+import {ObjectId, WithId} from "mongodb";
 import {BlogRepository} from "./blog-repository";
+import {OutputPostType, PostType} from "../types/post/output";
+import {postMapper} from "../types/post/mapper";
+import {CreatePostDto, UpdatePostDto} from "../types/post/input";
 
 export class PostRepository {
 
     static async getAllPosts() {
-        const result: any = await postCollection.find({}).toArray()
-        // console.log(result,'result')
-        return {
-            ...result,
-        _id:undefined
-        }
-        console.log(result,'result')
-    //     const modifiedResult = result.map((post: any) => ({
-    //         ...post,
-    //         id: post._id.toString(),
-    //         // _id: undefined,
-    //     }));
-    //
-    //     return modifiedResult;
+        const post: any = await postCollection.find({}).toArray()
+
+        return post.map(postMapper)
+
     }
 
-    static async getPostById(id: string) {
-        const objectId = new ObjectId(id);
-
-        const post: any = await postCollection.findOne({_id: objectId})
-
-        if (!post) {
+    static async getPostById(id: string): Promise<OutputPostType | null> {
+        try {
+            const post: WithId<PostType> | null = await postCollection.findOne({_id: new ObjectId(id)})
+            if (!post) {
+                return null
+            }
+            return postMapper(post)
+        } catch (e) {
             return null
         }
-        console.log(post,'post')
-        // return post
-        const modifiedResult = post.map((blog:any) => ({
-            ...blog,
-            id: blog._id.toString(),
-            // _id: undefined,
-        }));
 
-        return modifiedResult;
     }
 
 
-    static async addPost(post: PostType) {
-        // "id": "string",
-        //     "title": "string",
-        //     "shortDescription": "string",
-        //     "content": "string",
-        //     "blogId": "string",
-        //     "blogName": "string",
-        //     "createdAt": "2023-12-24T14:58:03.422Z"
-
-        // "title": "string",
-        //     "shortDescription": "string",
-        //     "content": "string",
-        //     "blogId": "string"
-       //  const foundIdBlog = await blogCollection.findOne({_id:new ObjectId(post.blogId)})
-       //
-       // if(!foundIdBlog){
-       //     return null
-       // }
-
+    static async createPost(data: CreatePostDto) {
         const createdAt = new Date()
-        const publicationDate = new Date()
 
-        publicationDate.setDate(createdAt.getDate() + 1)
-        // let idCreate = new ObjectId().toString()
-        // const result: any = await postCollection.insertOne({...post,_id: undefined,
-        //     id: new ObjectId().toString(),blogName:'xaxxa', createdAt: createdAt});
-        // const id =  result.insertedId
-        // const found: any = await postCollection.findOne({_id:id})
-        //
-        // return {
-        //     _id: undefined,
-        //     id:found.id.toString(),
-        //     title: found.title,
-        //     createdAt: createdAt,
-        //     shortDescription: found.shortDescription,
-        //     content: found.content,
-        //     blogId: found.blogId,
-        //     blogName: found.blogName
-        // }
-        const result: any = await postCollection.insertOne({
-            ...post,
-            // _id: undefined,
-             _id:new ObjectId() ,
-            id: new ObjectId().toString(),
-            blogName: 'xaxxa',
-            createdAt: createdAt
-        });
-        const found: any = await postCollection.findOne({_id: result.insertedId})
+        const blogName = await BlogRepository.getBlogById(data.blogId)
 
-        return {
-            // id: found._id.toString(),
-            // // ...foundgit ,
-            // _id: undefined,
-            // name: found.name,
-            // description: found.description,
-            // websiteUrl: found.websiteUrl,
-            // isMembership: false,
-            // // isMembership: found.isMembership,
-            // createdAt: found.createdAt.toISOString()
-            //
-            //     _id: undefined,
-            ...found,
-                id: found._id.toString(),
-                title: found.title,
-                createdAt: found.createdAt.toISOString(),
-                shortDescription: found.shortDescription,
-                content: found.content,
-                blogId: found.blogId,
-                blogName: found.blogName
+        if (blogName) {
+            const newPost: PostType = {
+                ...data,
+                blogName: blogName.name,
+                createdAt: createdAt.toISOString()
+            }
+            const result = await postCollection.insertOne(newPost)
+            return result.insertedId.toString()
+        } else {
+            return null
         }
+
     }
 
 
     static async deletePost(id: string) {
-        const result = await postCollection.deleteOne({_id: new ObjectId(id)})
-        return !!result.deletedCount
+        try {
+            const result = await postCollection.deleteOne({_id: new ObjectId(id)})
+            return result.deletedCount === 1
+        } catch (e) {
+            return false
+        }
     }
 
-    static async updatePost(id: string, post: PostType) {
-        const objectId = new ObjectId(id);
-        console.log(id, 'id')
-        const found: any = await postCollection.findOne({_id: objectId})
-        console.log(found, 'found')
+    static async updatePost(id: string, data: UpdatePostDto) {
+        const blog = await BlogRepository.getBlogById(data.blogId)
 
-        let result = await postCollection.updateOne({_id: objectId}, {
+        let result = await postCollection.updateOne({_id: new ObjectId(id)}, {
             $set: {
-                title: post.title,
-                shortDescription: post.shortDescription,
-                content: post.content,
-                blogId: post.blogId
+                title: data.title,
+                shortDescription: data.shortDescription,
+                content: data.content,
+                blogId: data.blogId,
+                blogName: blog!.name
             }
         })
 
-        console.log(result, 'result')
-        return !!result.matchedCount
+        return result.matchedCount === 1
     }
 
 

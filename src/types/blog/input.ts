@@ -1,8 +1,13 @@
 export type  BlogParams = {
     id:string
 }
+export type  CreateBlogDto = {
+    name:string,
+    description:string,
+    websiteUrl:string,
+}
 
-export type UpdateBlogData = {
+export type UpdateBlogDto = {
     name:string,
     description:string,
     websiteUrl:string,
