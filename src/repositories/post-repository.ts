@@ -54,7 +54,11 @@ export class PostRepository {
         //     "shortDescription": "string",
         //     "content": "string",
         //     "blogId": "string"
-
+       //  const foundIdBlog = await blogCollection.findOne({_id:new ObjectId(post.blogId)})
+       //
+       // if(!foundIdBlog){
+       //     return null
+       // }
 
         const createdAt = new Date()
         const publicationDate = new Date()
